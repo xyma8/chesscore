@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"math/bits"
 )
 
 func printMatrix(matrix [64]uint64) {
@@ -14,43 +13,31 @@ func printMatrix(matrix [64]uint64) {
 	}
 }
 
-func bitboardToMatrix(board uint64) (matrix [64]uint64) {
-	const MAX uint64 = 18446744073709551615
-	var mask uint64 = MAX
-	bitLen := bits.Len64(board)
-
-	for i := 0; i < bitLen; i++ {
-		mask = MAX ^ 1<<i
-		square := board &^ mask
-		if square != 0 {
-			square = square >> i
-		}
-
-		//fmt.Printf("%b", square)
-		matrix[i] = square
+func bitboardToArray(bb uint64) (board [64]uint8) {
+	for i := 0; i < 64; i++ {
+		board[i] = uint8((bb >> i) & 1)
 	}
-
-	return matrix
+	return
 }
 
 func main() {
 	var board uint64 = 0
-	board |= 1 << 0
+	board |= 1 << a1
 	board |= 1 << 2
-	board |= 1 << 5
+	board |= 1 << f1
+
+	var whitePawns uint64 = 1<<a2 | 1<<b2 | 1<<c2 | 1<<d2 | 1<<e2 | 1<<f2 | 1<<g2 | 1<<h2
+	var blackPawns uint64 = 1<<a7 | 1<<b7 | 1<<c7 | 1<<d7 | 1<<e7 | 1<<f7 | 1<<g7 | 1<<h7
 	//fmt.Printf("%b \n", board)
 	//board = board &^ 0b111011
-	fmt.Printf("%b \n", board)
-	//fmt.Println(bits.Len64(board))
+	fmt.Printf("%b \n", whitePawns)
+	fmt.Printf("%b \n", blackPawns)
 	//test := 0b100100 &^ 0b110111
 	//fmt.Printf("%b \n", test)
 
-	var mask uint64 = 18446744073709551615
-	mask ^= 1 << 0
 	//fmt.Printf("%b \n", mask)
 	//fmt.Printf("%b \n", board&^mask>>0)
 	//fmt.Println()
-	matrix := bitboardToMatrix(board)
+	matrix := bitboardToArray(whitePawns)
 	fmt.Println(matrix)
-	//printMatrix(matrix)
 }
